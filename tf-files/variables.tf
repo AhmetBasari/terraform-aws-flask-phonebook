@@ -2,7 +2,6 @@ variable "git-name" {
   default = "AhmetBasari"
 }
 
-
 variable "key-name" {
   default = "firstkey"
 }
