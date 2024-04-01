@@ -50,6 +50,7 @@ resource "aws_security_group" "server-sg" {
   }
 }
 
+
 resource "aws_security_group" "db-sg" {
   name   = "RDSSecurityGroup"
   vpc_id = data.aws_vpc.selected.id

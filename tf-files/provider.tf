@@ -1,3 +1,6 @@
+
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs
+
 terraform {
   required_providers {
     aws = {
@@ -11,5 +14,3 @@ terraform {
 provider "aws" {
   region = "us-east-1"
 }
-
-# https://registry.terraform.io/providers/hashicorp/aws/latest/docs

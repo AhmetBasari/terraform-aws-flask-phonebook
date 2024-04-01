@@ -3,9 +3,8 @@ dnf update -y
 dnf install pip -y
 pip3 install flask==2.3.3
 pip3 install flask_mysql
-pip3 install boto3
 dnf install git -y
-TOKEN=${token_value}
+TOKEN=${user-data-git-token}
 USER=${user-data-git-name}
 cd /home/ec2-user && git clone https://$TOKEN@github.com/$USER/terraform-aws-flask-phonebook
 .git

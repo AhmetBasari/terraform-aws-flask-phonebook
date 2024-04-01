@@ -1,3 +1,4 @@
+
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc
 data "aws_vpc" "selected" {
   default = true
@@ -32,7 +33,10 @@ data "aws_subnets" "pb-subnets" {
     name   = "vpc-id"
     values = [data.aws_vpc.selected.id]
   }
-  
+  filter { #  Notes:  A load balancer cannot be attached to multiple subnets in the same Availability Zone.
+    name   = "tag:Name"
+    values = ["default*"]
+  }
 }
 
 data "aws_route53_zone" "selected" {
@@ -47,10 +51,6 @@ data "aws_ssm_parameter" "username" {
   name = "/ahmet/terraform/username"
 }
 
-data "aws_ssm_parameter" "example_parameter" {
+data "aws_ssm_parameter" "token" {
   name = "/ahmet/terraform/token"
 }
-
-# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ami
-
-# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc

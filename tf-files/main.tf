@@ -43,10 +43,10 @@ resource "aws_alb_listener" "app-listener" {
 resource "aws_launch_template" "asg-lt" {
   name                   = "phonebook-lt"
   image_id               = data.aws_ami.al2023.id
-  instance_type          = var.instance_type
+  instance_type          = "t2.micro"
   key_name               = var.key-name
   vpc_security_group_ids = [aws_security_group.server-sg.id]
-  user_data              = base64encode(templatefile("userdata.sh", { token_value = data.aws_ssm_parameter.example_parameter.value, db-endpoint = aws_db_instance.db-server.address, user-data-git-name = var.git-name }))
+  user_data              = base64encode(templatefile("userdata.sh", { db-endpoint = aws_db_instance.db-server.address, user-data-git-token = data.aws_ssm_parameter.token.value, user-data-git-name = var.git-name }))
   tag_specifications {
     resource_type = "instance"
     tags = {
@@ -54,7 +54,6 @@ resource "aws_launch_template" "asg-lt" {
     }
   }
 }
-
 
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group
@@ -76,10 +75,8 @@ resource "aws_autoscaling_group" "app-asg" {
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_instance
 
-
-
 resource "aws_db_instance" "db-server" {
-  instance_class              = var.db_server_instance
+  instance_class              = "db.t3.micro"
   allocated_storage           = 20
   vpc_security_group_ids      = [aws_security_group.db-sg.id]
   allow_major_version_upgrade = false
@@ -87,8 +84,8 @@ resource "aws_db_instance" "db-server" {
   backup_retention_period     = 0
   identifier                  = "phonebook-app-db"
   db_name                     = "phonebook"
-  engine                      = var.db_engine
-  engine_version              = var.db_engine_version
+  engine                      = "mysql"
+  engine_version              = "8.0.28"
   username                    = data.aws_ssm_parameter.username.value
   password                    = data.aws_ssm_parameter.password.value
   monitoring_interval         = 0
